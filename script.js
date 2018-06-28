@@ -1,11 +1,17 @@
-$(document).on('click', '.nyan', ({target}) => {});
+$(document).on('click', '.nyan', ({target}) => {
+});
+
+$(document).on('si:click', cell => {
+});
 
 jQuery(async $ => {
   const [, width, height] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
+  const imageWidth = 80;
+  const imageHeight = 80;
   const table = [];
   const board = $('.board').css({
-    width: `${width * 80}px`,
-    height: `${height * 80}px`,
+    width: `${width * imageWidth}px`,
+    height: `${height * imageHeight}px`,
   });
   const sime = $('<div class="sime">').appendTo(board);
 
@@ -19,9 +25,9 @@ jQuery(async $ => {
         .css({
           left: `${x * 100 / width}%`,
           top: `${y * 100 / height}%`,
-          backgroundSize: `${80 * width}px ${80 * height}px`,
-          backgroundPositionX: `-${80 * x}px`,
-          backgroundPositionY: `-${80 * y}px`,
+          backgroundSize: `${imageWidth * width}px ${imageHeight * height}px`,
+          backgroundPositionX: `-${imageWidth * x}px`,
+          backgroundPositionY: `-${imageHeight * y}px`,
         })
         .appendTo(sime);
 
@@ -35,6 +41,4 @@ jQuery(async $ => {
 
     table.push(row);
   }
-
-  board.removeClass('loading');
 });
