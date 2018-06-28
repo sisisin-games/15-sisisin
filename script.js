@@ -145,36 +145,35 @@ new Vue({
       const {count} = this;
       const time = ((this.endedAt - this.startedAt) / 1000).toFixed(2);
 
-      cv({size, count time,
-      });
+      this.cv({size, count, time});
 
       setTimeout(() => {
-        alert(`クリア！\n操作数は ${this.count} 回\nタイムは ${time} 秒でした`);
+        alert(`${size} をクリア！\n操作数は ${count} 回\nタイムは ${time} 秒でした`);
 
         const {blankX: x, blankY: y} = this;
         this.nyans.push({x0: x, y0: y, x, y});
       }, 200);
     },
+
+    cv(cvDetail) {
+      if (!window._adp) {
+        window._adp = [];
+      }
+
+      window._adp.push({
+        cvDetail,
+        s: 'wc',
+        a: '403',
+        f: '478',
+        u: 'https://a403.stg-tracker.adplan7.com/wc/c/j/478',
+        db: 'https://a403.stg-tracker.adplan7.com/db/pb/403',
+      });
+
+      const script = document.createElement('script');
+      script.src = 'https://stg-widget.adplan7.com/s/1.0/wc.js';
+      script.charset = 'utf-8';
+      document.head.appendChild(script);
+      document.adoptNode(script);
+    },
   },
 });
-
-function cv(cvDetail) {
-  if (!window._adp) {
-    window._adp = [];
-  }
-
-  window._adp.push({
-    cvDetail,
-    s: 'wc',
-    a: '403',
-    f: '478',
-    u: 'https://a403.stg-tracker.adplan7.com/wc/c/j/478',
-    db: 'https://a403.stg-tracker.adplan7.com/db/pb/403',
-  });
-
-  const script = document.createElement('script');
-  script.src = 'https://stg-widget.adplan7.com/s/1.0/wc.js';
-  script.charset = 'utf-8';
-  document.head.appendChild(script);
-  document.adoptNode(script);
-}
