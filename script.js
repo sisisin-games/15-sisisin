@@ -1,4 +1,4 @@
-$(document).on('click', '.nyan', ({target}) => {
+$(document).on('click', '.nyan:not(.blank)', ({target}) => {
   const nyan = $(target);
   const x = nyan.data('x');
   const y = nyan.data('y');
@@ -11,7 +11,7 @@ $(document).on('click', '.nyan', ({target}) => {
 
   const targets = [];
 
-  for (let x1 = x; x1 < bx; x1++) {
+  for (let x1 = x; x < bx ? x1 < bx : bx < x1; x1++) {
     for (let y1 = y; y1 < by; y1++) {
     }
   }
