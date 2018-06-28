@@ -37,12 +37,8 @@ body {
 
 .nyan {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   background: url("https://emoji.slack-edge.com/T04Q5G460/spining_sisisin/f0a7e075a3b15f2c.gif") no-repeat;
   transition: 200ms ease-out;
-}
-
-.nyan.blank {
-  background: #333;
 }

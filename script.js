@@ -1,62 +1,78 @@
-$(document).on('click', '.nyan:not(.blank)', ({target}) => {
-  const nyan = $(target);
-  const x = nyan.data('x');
-  const y = nyan.data('y');
-  const blank = $('.blank');
-  const bx = blank.data('x');
-  const by = blank.data('y');
+/* global Vue:false */
+const [, sizeW, sizeH] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
 
-  if (x !== bx && y !== by)
-    return;
+const app = new Vue({
+  el: '.board',
+  template: `
+`,
+  data: {
+    sizeW,
+    sizeH,
+    width: 64,
+    height: 64,
+    blankX: sizeW - 1,
+    blankY: sizeH - 1,
+    nyans: [],
+  },
+  methods: {
+    getStyle(nyan) {
+      return {
+        left: `${this.width * nyan.x}px`,
+        top: `${this.height * nyan.y}px`,
+        'background-size': `${this.width * sizeW}px ${this.height * sizeH}px`,
+        'background-position': `-${this.width * nyan.x0}px -${this.height * nyan.y0}px`,
+      };
+    },
+    check() {
+      const w = this.sizeW;
+      return this.nyans.every(({x, y}, i) => x === i % w && y === (i / w | 0));
+    },
+    click(nyan) {
+      const {x, y} = nyan;
+      const {blankX, blankY, nyans} = this;
 
-  const ux = bx < x ? 1 : -1;
-  const uy = by < y ? 1 : -1;
+      if (x === blankX) {
+        for (const n of nyans) {
+          if (n.x !== x)
+            continue;
 
-  for (let x1 = bx; x1 * ux <= x * ux; x1 += ux) {
-    for (let y1 = by; y1 * uy <= y * uy; y1 += uy) {
-      if (x1 === bx && y1 === by)
-        continue;
+          if (y < blankY) {
+            if (y <= n.y && n.y < blankY)
+              n.y++;
+          } else {
+            if (blankY < n.y && n.y <= y)
+              n.y--;
+          }
+        }
+      } else if (y === blankY) {
+        for (const n of nyans) {
+          if (n.y !== y)
+            continue;
 
-      const n = $(`.nyan[data-x="${x1}"][data-y="${y1}"]`);
-      const left = n.css('left');
-      const top = n.css('top');
-      n.css({ left: blank.css('left'), top: blank.css('top') });
-      blank.css({ left, top });
-    }
-  }
+          if (x < blankX) {
+            if (x <= n.x && n.x < blankX)
+              n.x++;
+          } else {
+            if (blankX < n.x && n.x <= x)
+              n.x--;
+          }
+        }
+      } else {
+        return;
+      }
+
+      this.blankX = x;
+      this.blankY = y;
+      this.check();
+    },
+  },
 });
 
-$(document).on('si:click', cell => {
-});
+app.$el.style.width = `${sizeW * app.width}px`;
+app.$el.style.height = `${sizeH * app.height}px`;
 
-jQuery(async $ => {
-  const [, width, height] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
-  const imageWidth = 80;
-  const imageHeight = 80;
-  const board = $('.board').css({
-    width: `${width * imageWidth}px`,
-    height: `${height * imageHeight}px`,
-  });
-  const sime = $('<div class="sime">').appendTo(board);
-
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width ; x++) {
-      const nyan = $(`<div class="nyan">`)
-        .toggleClass('blank', x === width - 1 && y === height - 1)
-        .attr({
-          'data-x0': x,
-          'data-y0': y,
-          'data-x': x,
-          'data-y': y,
-        })
-        .css({
-          left: `${x * 100 / width}%`,
-          top: `${y * 100 / height}%`,
-          backgroundSize: `${imageWidth * width}px ${imageHeight * height}px`,
-          backgroundPositionX: `-${imageWidth * x}px`,
-          backgroundPositionY: `-${imageHeight * y}px`,
-        })
-        .appendTo(sime);
-    }
-  }
-});
+for (let i = 0; i < sizeW * sizeH - 1; i++) {
+  const x = i % sizeW;
+  const y = i / sizeW | 0;
+  app.nyans.push({x0: x, y0: y, x, y});
+}
