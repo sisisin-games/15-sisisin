@@ -2,6 +2,7 @@
 
 const app = new Vue({
   el: '#app',
+
   template: `
     <div class="board" :style="boardStyle">
       <div class="sime">
@@ -9,6 +10,7 @@ const app = new Vue({
       </div>
     </div>
   `,
+
   data: {
     finished: false,
     sizeW: 0,
@@ -21,6 +23,7 @@ const app = new Vue({
     time: 0,
     nyans: [],
   },
+
   computed: {
     boardStyle() {
       return {
@@ -29,6 +32,7 @@ const app = new Vue({
       };
     },
   },
+
   created() {
     const [, sizeW, sizeH] = (location.search.match(/\bsize=(?!1x1\b)(\d+)x(\d+)/) || [, 4, 4]).map(Number);
     this.sizeW = sizeW;
@@ -60,6 +64,7 @@ const app = new Vue({
         this.move(nyan);
     }
   },
+
   methods: {
     nyanStyle(nyan) {
       return {
@@ -69,21 +74,12 @@ const app = new Vue({
         backgroundPosition: `-${this.width * nyan.x0}px -${this.height * nyan.y0}px`,
       };
     },
+
     check() {
       const w = this.sizeW;
       return this.nyans.every(({x, y}, i) => x === i % w && y === (i / w | 0));
     },
-    click(nyan) {
-      if (this.finished)
-        return;
 
-      const {x, y} = nyan;
-
-      this.move(nyan);
-
-      if (this.check())
-        this.finish();
-    },
     move(nyan) {
       const {x, y} = nyan;
       const {blankX, blankY, nyans} = this;
@@ -121,16 +117,27 @@ const app = new Vue({
       this.blankX = x;
       this.blankY = y;
     },
+
+    click(nyan) {
+      if (this.finished)
+        return;
+
+      const {x, y} = nyan;
+
+      this.move(nyan);
+
+      if (this.check())
+        this.finish();
+    },
+
     finish() {
       this.finished = true;
-      this.nyans.push({
-        x0: this.sizeW - 1,
-        y0: this.sizeH - 1,
-        x: this.sizeW - 1,
-        y: this.sizeH - 1,
-      });
 
-      alert('finish');
+      setTimeout(() => {
+        const {blankX: x, blankY: y} = this;
+        this.nyans.push({x0: x, y0: y, x, y});
+        setTimeout(() => alert('finish'), 0);
+      }, 200);
     },
   },
 });
