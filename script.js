@@ -19,8 +19,9 @@ const app = new Vue({
     height: 80,
     blankX: 0,
     blankY: 0,
+    startedAt: 0,
+    endedAt: 0,
     count: 0,
-    time: 0,
     nyans: [],
   },
 
@@ -63,6 +64,10 @@ const app = new Vue({
       if (nyan)
         this.move(nyan);
     }
+  },
+
+  mounted() {
+    this.startedAt = Date.now();
   },
 
   methods: {
@@ -127,6 +132,7 @@ const app = new Vue({
       const {x, y} = nyan;
 
       this.move(nyan);
+      this.count++;
 
       if (this.check())
         this.finish();
@@ -134,9 +140,11 @@ const app = new Vue({
 
     finish() {
       this.finished = true;
+      this.endedAt = Date.now();
+      const time = ((this.endedAt - this.startedAt) / 1000).toFixed(2);
 
       setTimeout(() => {
-        alert('finish');
+        alert(`クリア！\n操作数は ${this.count} 回\nタイムは ${time} 秒でした`);
 
         const {blankX: x, blankY: y} = this;
         this.nyans.push({x0: x, y0: y, x, y});
