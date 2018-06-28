@@ -1,25 +1,45 @@
 /* global Vue:false */
-const [, sizeW, sizeH] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
 
 const app = new Vue({
-  el: '.board',
+  el: '#app',
   template: `
-`,
+    <div class="board" :style="{width: \`\${width * sizeW}px\`, height: \`\${height * sizeH}px\`}">
+      <div class="sime">
+        <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="nyanStyle(nyan)"></div>
+      </div>
+    </div>
+  `,
   data: {
-    sizeW,
-    sizeH,
+    sizeW: 0,
+    sizeH: 0,
     width: 64,
     height: 64,
-    blankX: sizeW - 1,
-    blankY: sizeH - 1,
+    blankX: 0,
+    blankY: 0,
     nyans: [],
   },
+  created() {
+    const [, sizeW, sizeH] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
+    this.sizeW = sizeW;
+    this.sizeH = sizeH;
+    this.blankX = sizeW - 1;
+    this.blankY = sizeH - 1;
+
+    for (let i = 0; i < sizeW * sizeH - 1; i++) {
+      const x = i % sizeW;
+      const y = i / sizeW | 0;
+      this.nyans.push({x0: x, y0: y, x, y});
+    }
+  },
   methods: {
-    getStyle(nyan) {
+    boardStyle() {
+      return 
+    },
+    nyanStyle(nyan) {
       return {
         left: `${this.width * nyan.x}px`,
         top: `${this.height * nyan.y}px`,
-        'background-size': `${this.width * sizeW}px ${this.height * sizeH}px`,
+        'background-size': `${this.width * this.sizeW}px ${this.height * this.sizeH}px`,
         'background-position': `-${this.width * nyan.x0}px -${this.height * nyan.y0}px`,
       };
     },
@@ -67,12 +87,3 @@ const app = new Vue({
     },
   },
 });
-
-app.$el.style.width = `${sizeW * app.width}px`;
-app.$el.style.height = `${sizeH * app.height}px`;
-
-for (let i = 0; i < sizeW * sizeH - 1; i++) {
-  const x = i % sizeW;
-  const y = i / sizeW | 0;
-  app.nyans.push({x0: x, y0: y, x, y});
-}
