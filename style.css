@@ -16,9 +16,13 @@ body {
 }
 
 .board {
+  position: relative;
   margin: auto;
 }
 
 .nyan {
+  position: absolute;
+  width: 80px;
+  height: 80px;
   background: url("https://emoji.slack-edge.com/T04Q5G460/sisisin/dca153ae0c46d1c3.jpg") no-repeat;
 }
