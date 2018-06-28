@@ -18,3 +18,7 @@ body {
 .board {
   margin: auto;
 }
+
+.nyan {
+  background: url("https://emoji.slack-edge.com/T04Q5G460/sisisin/dca153ae0c46d1c3.jpg") no-repeat;
+}
