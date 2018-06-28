@@ -12,19 +12,23 @@ jQuery(async $ => {
     const row = [];
 
     for (let x = 0; x < width ; x++) {
-      const nyan = $(`<div class="nyan" data-x="${x}" data-y="${y}">`).css({
-        left: `${x / width}%`,
-        top: `${y / height}%`,
-        backgroundSize: `${80 * width}px ${80 * height}px`,
-        backgroundPositionX: `${80 * x}px`,
-        backgroundPositionY: `${80 * y}px`,
-      }).appendTo(board);
+      const last = x + 1 === width && y + 1 === height;
+      const nyan = $(`<div class="nyan" data-x="${x}" data-y="${y}">`)
+        .toggleClass('last', last)
+        .css({
+          left: `${x * 100 / width}%`,
+          top: `${y * 100 / height}%`,
+          backgroundSize: `${80 * width}px ${80 * height}px`,
+          backgroundPositionX: `-${80 * x}px`,
+          backgroundPositionY: `-${80 * y}px`,
+        })
+        .appendTo(board);
 
       row.push({
         x,
         y,
         nyan,
-        last: x + 1 === width && y + 1 === height,
+        last,
       });
     }
 

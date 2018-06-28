@@ -13,11 +13,18 @@ body {
 
 body {
   display: flex;
+  background: url("https://emoji.slack-edge.com/T04Q5G460/sisisin/dca153ae0c46d1c3.jpg") left top/160px;
+  color: #333;
 }
 
 .board {
   position: relative;
   margin: auto;
+  padding: 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 1px 2px 5px #0003, 0 0 0 100vmax #fffe;
+  user-select: none;
 }
 
 .nyan {
@@ -25,4 +32,8 @@ body {
   width: 80px;
   height: 80px;
   background: url("https://emoji.slack-edge.com/T04Q5G460/spining_sisisin/f0a7e075a3b15f2c.gif") no-repeat;
+}
+
+.nyan.last {
+  background: none;
 }
