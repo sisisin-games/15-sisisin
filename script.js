@@ -5,8 +5,8 @@ const app = new Vue({
 
   template: `
     <div class="board">
-      <div class="sime" :style="boardStyle">
-        <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="nyanStyle(nyan)"></div>
+      <div class="sime" :style="simeStyle">
+        <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"></div>
       </div>
     </div>
   `,
@@ -26,7 +26,7 @@ const app = new Vue({
   },
 
   computed: {
-    boardStyle() {
+    simeStyle() {
       return {
         width: `${this.width * this.sizeW}px`,
         height: `${this.height * this.sizeH}px`,
@@ -71,7 +71,7 @@ const app = new Vue({
   },
 
   methods: {
-    nyanStyle(nyan) {
+    getNyanStyle(nyan) {
       return {
         width: `${this.width}px`,
         height: `${this.height}px`,
