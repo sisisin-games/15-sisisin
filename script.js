@@ -7,6 +7,7 @@ jQuery(async $ => {
     width: `${width * 80}px`,
     height: `${height * 80}px`,
   });
+  const sime = $('<div class="sime">').appendTo(board);
 
   for (let y = 0; y < height; y++) {
     const row = [];
@@ -22,7 +23,7 @@ jQuery(async $ => {
           backgroundPositionX: `-${80 * x}px`,
           backgroundPositionY: `-${80 * y}px`,
         })
-        .appendTo(board);
+        .appendTo(sime);
 
       row.push({
         x,
@@ -34,4 +35,6 @@ jQuery(async $ => {
 
     table.push(row);
   }
+
+  board.removeClass('loading');
 });
