@@ -14,10 +14,14 @@ $(document).on('click', '.nyan:not(.blank)', ({target}) => {
 
   for (let x1 = bx; x1 * ux <= x * ux; x1 += ux) {
     for (let y1 = by; y1 * uy <= y * uy; y1 += uy) {
-      if (x1 === bx || y1 === by)
+      if (x1 === bx && y1 === by)
         continue;
 
-      console.log(x1, y1);
+      const n = $(`.nyan[data-x="${x1}"][data-y="${y1}"]`);
+      const left = n.css('left');
+      const top = n.css('top');
+      n.css({ left: blank.css('left'), top: blank.css('top') });
+      blank.css({ left, top });
     }
   }
 });
