@@ -2,8 +2,11 @@ $(document).on('click', '.nyan', ({target}) => {});
 
 jQuery(async $ => {
   const [, width, height] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
-  const board = $('.board');
   const table = [];
+  const board = $('.board').css({
+    width: `${width * 80}px`,
+    height: `${height * 80}px`,
+  });
 
   for (let y = 0; y < height; y++) {
     const row = [];
@@ -12,8 +15,9 @@ jQuery(async $ => {
       const nyan = $(`<div class="nyan" data-x="${x}" data-y="${y}">`).css({
         left: `${x / width}%`,
         top: `${y / height}%`,
-        backgroundPositionX: ``,
-        backgroundPositionY: ``,
+        backgroundSize: `${80 * width}px ${80 * height}px`,
+        backgroundPositionX: `${80 * x}px`,
+        backgroundPositionY: `${80 * y}px`,
       }).appendTo(board);
 
       row.push({
