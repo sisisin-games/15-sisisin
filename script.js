@@ -9,10 +9,14 @@ $(document).on('click', '.nyan:not(.blank)', ({target}) => {
   if (x !== bx && y !== by)
     return;
 
-  const targets = [];
+  const ux = bx < x ? 1 : -1;
+  const uy = by < y ? 1 : -1;
 
-  for (let x1 = bx; bx < x ? x1 <= x : x <= x1; bx < x ? x1++ : x1--) {
-    for (let y1 = by; by < y ? y1 <= y : y <= y1; by < y ? y1++ : y1--) {
+  for (let x1 = bx; x1 * ux <= x * ux; x1 += ux) {
+    for (let y1 = by; y1 * uy <= y * uy; y1 += uy) {
+      if (x1 === bx || y1 === by)
+        continue;
+
       console.log(x1, y1);
     }
   }
