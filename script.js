@@ -2,6 +2,19 @@ $(document).on('click', '.nyan', ({target}) => {
   const nyan = $(target);
   const x = nyan.data('x');
   const y = nyan.data('y');
+  const blank = $('.blank');
+  const bx = blank.data('x');
+  const by = blank.data('y');
+
+  if (x !== bx && y !== by)
+    return;
+
+  const targets = [];
+
+  for (let x1 = x; x1 < bx; x1++) {
+    for (let y1 = y; y1 < by; y1++) {
+    }
+  }
 });
 
 $(document).on('si:click', cell => {
@@ -19,7 +32,14 @@ jQuery(async $ => {
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width ; x++) {
-      const nyan = $(`<div class="nyan" data-x="${x}" data-y="${y}">`)
+      const nyan = $(`<div class="nyan">`)
+        .toggleClass('blank', x === width - 1 && y === height - 1)
+        .attr({
+          'data-x0': x,
+          'data-y0': y,
+          'data-x': x,
+          'data-y': y,
+        })
         .css({
           left: `${x * 100 / width}%`,
           top: `${y * 100 / height}%`,
@@ -27,9 +47,6 @@ jQuery(async $ => {
           backgroundPositionX: `-${imageWidth * x}px`,
           backgroundPositionY: `-${imageHeight * y}px`,
         })
-        .toggleClass('blank', x + 1 === width && y + 1 === height)
-        .data('x', x)
-        .data('y', y)
         .appendTo(sime);
     }
   }
