@@ -25,17 +25,26 @@ const app = new Vue({
     this.blankX = sizeW - 1;
     this.blankY = sizeH - 1;
 
+    // 初期化
     for (let i = 0; i < sizeW * sizeH - 1; i++) {
       const x = i % sizeW;
       const y = i / sizeW | 0;
       this.nyans.push({x0: x, y0: y, x, y});
     }
 
-    for (let i = 0; i < sizeW * sizeH * 100; i++) {
+    // シャッフル
+    for (let i = 0; i < sizeW * sizeH * 10; i++) {
       const {blankX, blankY, nyans} = this;
       const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
       const nyan = arr[Math.random() * arr.length | 0];
       this.move(nyan);
+    }
+    
+    console.log(this.blankX, this.blankY);
+
+    // 右下をあける
+    for (let y = this.blankY; y < sizeH; y++) {
+      this.move(this.nyans.find(n => n.x === sizeW - 1 && n.y === y));
     }
   },
   methods: {
