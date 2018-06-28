@@ -31,6 +31,7 @@ const app = new Vue({
       this.nyans.push({x0: x, y0: y, x, y});
     }
     for (let i = 0, x = this.blankX, y = this.blankY; i < sizeW * sizeH; i++) {
+      const rx = Math.random() * this.sizeW
     }
   },
   methods: {
@@ -44,8 +45,8 @@ const app = new Vue({
       return {
         left: `${this.width * nyan.x}px`,
         top: `${this.height * nyan.y}px`,
-        'background-size': `${this.width * this.sizeW}px ${this.height * this.sizeH}px`,
-        'background-position': `-${this.width * nyan.x0}px -${this.height * nyan.y0}px`,
+        backgroundSize: `${this.width * this.sizeW}px ${this.height * this.sizeH}px`,
+        backgroundPosition: `-${this.width * nyan.x0}px -${this.height * nyan.y0}px`,
       };
     },
     check() {
