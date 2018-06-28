@@ -11,8 +11,9 @@ $(document).on('click', '.nyan:not(.blank)', ({target}) => {
 
   const targets = [];
 
-  for (let x1 = x; x < bx ? x1 < bx : bx < x1; x1++) {
-    for (let y1 = y; y1 < by; y1++) {
+  for (let x1 = bx; bx < x ? x1 <= x : x <= x1; bx < x ? x1++ : x1--) {
+    for (let y1 = by; by < y ? y1 <= y : y <= y1; by < y ? y1++ : y1--) {
+      console.log(x1, y1);
     }
   }
 });
