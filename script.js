@@ -1,4 +1,7 @@
 $(document).on('click', '.nyan', ({target}) => {
+  const nyan = $(target);
+  const x = nyan.data('x');
+  const y = nyan.data('y');
 });
 
 $(document).on('si:click', cell => {
@@ -8,7 +11,6 @@ jQuery(async $ => {
   const [, width, height] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
   const imageWidth = 80;
   const imageHeight = 80;
-  const table = [];
   const board = $('.board').css({
     width: `${width * imageWidth}px`,
     height: `${height * imageHeight}px`,
@@ -16,12 +18,8 @@ jQuery(async $ => {
   const sime = $('<div class="sime">').appendTo(board);
 
   for (let y = 0; y < height; y++) {
-    const row = [];
-
     for (let x = 0; x < width ; x++) {
-      const last = x + 1 === width && y + 1 === height;
       const nyan = $(`<div class="nyan" data-x="${x}" data-y="${y}">`)
-        .toggleClass('last', last)
         .css({
           left: `${x * 100 / width}%`,
           top: `${y * 100 / height}%`,
@@ -29,16 +27,10 @@ jQuery(async $ => {
           backgroundPositionX: `-${imageWidth * x}px`,
           backgroundPositionY: `-${imageHeight * y}px`,
         })
+        .toggleClass('blank', x + 1 === width && y + 1 === height)
+        .data('x', x)
+        .data('y', y)
         .appendTo(sime);
-
-      row.push({
-        x,
-        y,
-        nyan,
-        last,
-      });
     }
-
-    table.push(row);
   }
 });
