@@ -4,8 +4,8 @@ const app = new Vue({
   el: '#app',
 
   template: `
-    <div class="board" :style="boardStyle">
-      <div class="sime">
+    <div class="board">
+      <div class="sime" :style="boardStyle">
         <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="nyanStyle(nyan)"></div>
       </div>
     </div>
@@ -15,8 +15,8 @@ const app = new Vue({
     finished: false,
     sizeW: 0,
     sizeH: 0,
-    width: 64,
-    height: 64,
+    width: 80,
+    height: 80,
     blankX: 0,
     blankY: 0,
     count: 0,
@@ -68,6 +68,8 @@ const app = new Vue({
   methods: {
     nyanStyle(nyan) {
       return {
+        width: `${this.width}px`,
+        height: `${this.height}px`,
         left: `${this.width * nyan.x}px`,
         top: `${this.height * nyan.y}px`,
         backgroundSize: `${this.width * this.sizeW}px ${this.height * this.sizeH}px`,
@@ -134,9 +136,10 @@ const app = new Vue({
       this.finished = true;
 
       setTimeout(() => {
+        alert('finish');
+
         const {blankX: x, blankY: y} = this;
         this.nyans.push({x0: x, y0: y, x, y});
-        setTimeout(() => alert('finish'), 0);
       }, 200);
     },
   },

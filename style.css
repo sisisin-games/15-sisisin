@@ -18,11 +18,9 @@ body {
 }
 
 .board {
-  width: 0;
-  height: 0;
   margin: auto;
   padding: 20px;
-  background: #0003;
+  background: #000c;
   box-shadow: 1px 2px 5px #0003, 0 0 0 100vmax #fffe;
   user-select: none;
   transition: 200ms ease-out;
@@ -30,14 +28,10 @@ body {
 
 .sime {
   position: relative;
-  width: 100%;
-  height: 100%;
 }
 
 .nyan {
   position: absolute;
-  width: 64px;
-  height: 64px;
   background: url("https://emoji.slack-edge.com/T04Q5G460/spining_sisisin/f0a7e075a3b15f2c.gif") no-repeat;
   transition: 200ms ease-out;
 }
