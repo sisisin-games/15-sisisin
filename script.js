@@ -30,8 +30,12 @@ const app = new Vue({
       const y = i / sizeW | 0;
       this.nyans.push({x0: x, y0: y, x, y});
     }
-    for (let i = 0, x = this.blankX, y = this.blankY; i < sizeW * sizeH; i++) {
-      const rx = Math.random() * this.sizeW
+
+    for (let i = 0; i < sizeW * sizeH * 100; i++) {
+      const {blankX, blankY, nyans} = this;
+      const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
+      const nyan = arr[Math.random() * arr.length | 0];
+      this.move(nyan);
     }
   },
   methods: {
@@ -57,8 +61,6 @@ const app = new Vue({
       const {x, y} = nyan;
 
       this.move(nyan);
-      this.blankX = x;
-      this.blankY = y;
       
       if (this.check())
         this.finish();
@@ -67,7 +69,7 @@ const app = new Vue({
       const {x, y} = nyan;
       const {blankX, blankY, nyans} = this;
 
-      if (x === blankX) {
+      if (x === blankX && y !== blankY) {
         for (const n of nyans) {
           if (n.x !== x)
             continue;
@@ -80,7 +82,7 @@ const app = new Vue({
               n.y--;
           }
         }
-      } else if (y === blankY) {
+      } else if (y === blankY && x !== blankX) {
         for (const n of nyans) {
           if (n.y !== y)
             continue;
@@ -93,7 +95,12 @@ const app = new Vue({
               n.x--;
           }
         }
+      } else {
+        return;
       }
+
+      this.blankX = x;
+      this.blankY = y;
     },
     finish() {
       alert('finish');
