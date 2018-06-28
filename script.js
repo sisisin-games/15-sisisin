@@ -3,7 +3,7 @@
 const app = new Vue({
   el: '#app',
   template: `
-    <div class="board" :style="{width: \`\${width * sizeW}px\`, height: \`\${height * sizeH}px\`}">
+    <div class="board" :style="boardStyle()">
       <div class="sime">
         <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="nyanStyle(nyan)"></div>
       </div>
@@ -30,10 +30,15 @@ const app = new Vue({
       const y = i / sizeW | 0;
       this.nyans.push({x0: x, y0: y, x, y});
     }
+    for (let i = 0, x = this.blankX, y = this.blankY; i < sizeW * sizeH; i++) {
+    }
   },
   methods: {
     boardStyle() {
-      return 
+      return {
+        width: `${this.width * this.sizeW}px`,
+        height: `${this.height * this.sizeH}px`,
+      };
     },
     nyanStyle(nyan) {
       return {
@@ -48,6 +53,16 @@ const app = new Vue({
       return this.nyans.every(({x, y}, i) => x === i % w && y === (i / w | 0));
     },
     click(nyan) {
+      const {x, y} = nyan;
+
+      this.move(nyan);
+      this.blankX = x;
+      this.blankY = y;
+      
+      if (this.check())
+        this.finish();
+    },
+    move(nyan) {
       const {x, y} = nyan;
       const {blankX, blankY, nyans} = this;
 
@@ -77,13 +92,10 @@ const app = new Vue({
               n.x--;
           }
         }
-      } else {
-        return;
       }
-
-      this.blankX = x;
-      this.blankY = y;
-      this.check();
+    },
+    finish() {
+      alert('finish');
     },
   },
 });
