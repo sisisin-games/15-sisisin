@@ -3,23 +3,34 @@
 const app = new Vue({
   el: '#app',
   template: `
-    <div class="board" :style="boardStyle()">
+    <div class="board" :style="boardStyle">
       <div class="sime">
         <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="nyanStyle(nyan)"></div>
       </div>
     </div>
   `,
   data: {
+    finished: false,
     sizeW: 0,
     sizeH: 0,
     width: 64,
     height: 64,
     blankX: 0,
     blankY: 0,
+    count: 0,
+    time: 0,
     nyans: [],
   },
+  computed: {
+    boardStyle() {
+      return {
+        width: `${this.width * this.sizeW}px`,
+        height: `${this.height * this.sizeH}px`,
+      };
+    },
+  },
   created() {
-    const [, sizeW, sizeH] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(Number);
+    const [, sizeW, sizeH] = (location.search.match(/\bsize=(?!1x1\b)(\d+)x(\d+)/) || [, 4, 4]).map(Number);
     this.sizeW = sizeW;
     this.sizeH = sizeH;
     this.blankX = sizeW - 1;
@@ -33,12 +44,14 @@ const app = new Vue({
     }
 
     // シャッフル
-    for (let i = 0; i < sizeW * sizeH * 10; i++) {
-      const {blankX, blankY, nyans} = this;
-      const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
-      const nyan = arr[Math.random() * arr.length | 0];
-      this.move(nyan);
-    }
+    do {
+      for (let i = 0; i < sizeW * sizeH * 10; i++) {
+        const {blankX, blankY, nyans} = this;
+        const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
+        const nyan = arr[Math.random() * arr.length | 0];
+        this.move(nyan);
+      }
+    } while (this.check());
 
     // 右下をあける
     for (let y = this.blankY; y < sizeH; y++) {
@@ -48,12 +61,6 @@ const app = new Vue({
     }
   },
   methods: {
-    boardStyle() {
-      return {
-        width: `${this.width * this.sizeW}px`,
-        height: `${this.height * this.sizeH}px`,
-      };
-    },
     nyanStyle(nyan) {
       return {
         left: `${this.width * nyan.x}px`,
@@ -67,10 +74,13 @@ const app = new Vue({
       return this.nyans.every(({x, y}, i) => x === i % w && y === (i / w | 0));
     },
     click(nyan) {
+      if (this.finished)
+        return;
+
       const {x, y} = nyan;
 
       this.move(nyan);
-      
+
       if (this.check())
         this.finish();
     },
@@ -112,12 +122,14 @@ const app = new Vue({
       this.blankY = y;
     },
     finish() {
+      this.finished = true;
       this.nyans.push({
         x0: this.sizeW - 1,
         y0: this.sizeH - 1,
         x: this.sizeW - 1,
         y: this.sizeH - 1,
       });
+
       alert('finish');
     },
   },
