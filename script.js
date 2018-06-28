@@ -39,12 +39,12 @@ const app = new Vue({
       const nyan = arr[Math.random() * arr.length | 0];
       this.move(nyan);
     }
-    
-    console.log(this.blankX, this.blankY);
 
     // 右下をあける
     for (let y = this.blankY; y < sizeH; y++) {
-      this.move(this.nyans.find(n => n.x === sizeW - 1 && n.y === y));
+      const nyan = this.nyans.find(n => n.x === sizeW - 1 && n.y === y);
+      if (nyan)
+        this.move(nyan);
     }
   },
   methods: {
@@ -112,6 +112,12 @@ const app = new Vue({
       this.blankY = y;
     },
     finish() {
+      this.nyans.push({
+        x0: this.sizeW - 1,
+        y0: this.sizeH - 1,
+        x: this.sizeW - 1,
+        y: this.sizeH - 1,
+      });
       alert('finish');
     },
   },
