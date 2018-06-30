@@ -8,24 +8,18 @@
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
   <script src="/script.js" defer></script>
-  <script defer>
+  <script>
   if (!window._adp) { window._adp = []; }
   window._adp.push({
-    s: "ws",
-    a: "403",
-    u: "https://a403.stg-tracker.adplan7.com/ws/v/j/403",
-    db: "https://a403.stg-tracker.adplan7.com/db/pb/403",
-    d: "https://a403.stg-tracker.adplan7.com/",
-    cd: ["15-sisisin.glitch.me"]
+    s: 'ws',
+    a: '403',
+    u: 'https://a403.stg-tracker.adplan7.com/ws/v/j/403',
+    db: 'https://a403.stg-tracker.adplan7.com/db/pb/403',
+    d: 'https://a403.stg-tracker.adplan7.com/',
+    cd: ['15-sisisin.glitch.me']
   });
-  (function(t) {
-    var i = document.createElement(t), s;
-    i.src = "https://stg-widget.adplan7.com/s/1.0/ws.js";
-    i.charset = "utf-8";
-    s = document.getElementsByTagName(t)[0];
-    s.parentNode.insertBefore(i, s);
-  })("script");
   </script>
+  <script src="https://stg-widget.adplan7.com/s/1.0/ws.js" charset="utf-8" async defer></script>
 </head>
 <body>
   <div id="app"></div>

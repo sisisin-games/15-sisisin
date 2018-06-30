@@ -1,28 +1,53 @@
 /* global Vue:false */
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+Vue.component('modal-alert', {
+  template: `
+    <transition name="modal">
+      <div class="modal" @click="$emit('close')">
+        <div class="modal-container" @click="$event.stopPropagation()">
+          <slot/>
+        </div>
+      </div>
+    </transition>
+  `
+});
+
 new Vue({
   el: '#app',
 
   template: `
     <div class="board">
-      <div class="sime" :style="simeStyle">
-        <div v-for="nyan in nyans" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"></div>
-      </div>
+      <transition-group tag="div" name="nyan" class="sime" :class="{bounce: finished}" :style="simeStyle">
+        <div v-for="nyan in nyans" :key="nyan.id" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"/>
+      </transition-group>
+      <modal-alert v-if="showModal" @close="showModal = false">
+        <div class="modal-header">ゲームクリア</div>
+        <div class="modal-body">
+          <div>{{size}} をクリア！</div>
+          <div>操作数は {{count}} 回</div>
+          <div>タイムは {{time}} 秒でした</div>
+        </div>
+      </modal-alert>
     </div>
   `,
 
-  data: {
-    finished: false,
-    sizeW: 0,
-    sizeH: 0,
-    width: 80,
-    height: 80,
-    blankX: 0,
-    blankY: 0,
-    startedAt: 0,
-    endedAt: 0,
-    count: 0,
-    nyans: [],
+  data() {
+    return {
+      showModal: false,
+      finished: false,
+      sizeW: 0,
+      sizeH: 0,
+      width: 80,
+      height: 80,
+      blankX: 0,
+      blankY: 0,
+      startedAt: 0,
+      endedAt: 0,
+      count: 0,
+      nyans: [],
+    };
   },
 
   computed: {
@@ -31,6 +56,12 @@ new Vue({
         width: `${this.width * this.sizeW}px`,
         height: `${this.height * this.sizeH}px`,
       };
+    },
+    size() {
+      return `${this.sizeW}x${this.sizeH}`;
+    },
+    time() {
+      return ((this.endedAt - this.startedAt) / 1000).toFixed(2);
     },
   },
 
@@ -45,7 +76,7 @@ new Vue({
     for (let i = 0; i < sizeW * sizeH - 1; i++) {
       const x = i % sizeW;
       const y = i / sizeW | 0;
-      this.nyans.push({x0: x, y0: y, x, y});
+      this.nyans.push({id: i, x0: x, y0: y, x, y});
     }
 
     // シャッフル
@@ -138,21 +169,29 @@ new Vue({
         this.finish();
     },
 
-    finish() {
+    async finish() {
       this.finished = true;
       this.endedAt = Date.now();
-      const size = `${this.sizeW}x${this.sizeH}`;
-      const {count} = this;
-      const time = ((this.endedAt - this.startedAt) / 1000).toFixed(2);
 
-      this.cv({size, count, time});
+      this.cv({
+        size: this.size,
+        count: this.count,
+        time: this.time,
+      });
 
-      setTimeout(() => {
-        alert(`${size} をクリア！\n操作数は ${count} 回\nタイムは ${time} 秒でした`);
+      await wait(500);
 
-        const {blankX: x, blankY: y} = this;
-        this.nyans.push({x0: x, y0: y, x, y});
-      }, 200);
+      this.nyans.push({
+        id: this.sizeW * this.sizeH - 1,
+        x0: this.blankX,
+        y0: this.blankY,
+        y: this.blankX,
+        x: this.blankY,
+      });
+
+      await wait(1000);
+
+      this.showModal = true;
     },
 
     cv(cvDetail) {

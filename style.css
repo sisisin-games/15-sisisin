@@ -29,3 +29,64 @@ body {
   background: url("https://emoji.slack-edge.com/T04Q5G460/spining_sisisin/f0a7e075a3b15f2c.gif") no-repeat;
   transition: 200ms ease-out;
 }
+
+.nyan-enter {
+  opacity: 0;
+}
+
+.nyan-leave-active {
+  opacity: 0;
+}
+
+.bounce {
+  animation: bounce 500ms ease-out alternate infinite;
+}
+
+@keyframes bounce {
+    0% { transform: scale(0.9) }
+  100% { transform: scale(1.1) }
+}
+
+/* modal */
+.modal {
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #0008;
+  z-index: 9999;
+  transition: .3s ease;
+}
+
+.modal-container {
+  margin: auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px #0006;
+  transition: 300ms ease;
+}
+
+.modal-header {
+  color: #3c9;
+  font-weight: bold;
+}
+
+.modal-body {
+  margin-top: 1rem;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-to .modal-container {
+  transform: scale(1.1);
+}
