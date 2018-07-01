@@ -37,7 +37,8 @@ const app = new Vue({
   `,
 
   data() {
-    const [, sizeW, sizeH] = (location.search.match(/\bsize=(?!1x1\b)(\d+)x(\d+)/) || [, 4, 4]).map(Number);
+    const [, sizeW, sizeH] = (location.search.match(/\bsize=(\d+)x(\d+)/) || [, 4, 4]).map(n => Math.max(n, 2));
+
     return {
       finished: false,
       modalShown: false,
@@ -80,22 +81,22 @@ const app = new Vue({
       nyans.push({x0: x, y0: y, x, y});
     }
 
-    // シャッフル
     do {
+      // シャッフル
       for (let i = 0; i < w * h * 10; i++) {
         const {blankX, blankY} = this;
         const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
         const nyan = arr[Math.random() * arr.length | 0];
         this.move(nyan);
       }
-    } while (this.check());
 
-    // 右下をあける
-    for (let y = this.blankY; y < h; y++) {
-      const nyan = nyans.find(n => n.x === w - 1 && n.y === y);
-      if (nyan)
-        this.move(nyan);
-    }
+      // 右下をあける
+      for (let y = this.blankY; y < h; y++) {
+        const nyan = nyans.find(n => n.x === w - 1 && n.y === y);
+        if (nyan)
+          this.move(nyan);
+      }
+    } while (this.check());
   },
 
   mounted() {

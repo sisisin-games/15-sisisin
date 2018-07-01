@@ -50,16 +50,15 @@ body {
   color: inherit;
   font-size: 40px;
   outline: none;
-  opacity: 0.9;
   transition: 200ms ease-out;
 }
 
 .retry:active {
-  transform: scale(0.98);
+  transform: scale(0.9);
 }
 
 .retry:hover {
-  opacity: 1;
+  border-color: #33c;
 }
 
 .fade-enter,
