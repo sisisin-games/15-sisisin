@@ -12,12 +12,12 @@ body {
 }
 
 .board {
+  position: relative;
   margin: auto;
   padding: 20px;
   background: #000c;
   box-shadow: 1px 2px 5px #0003, 0 0 0 100vmax #fffe;
   user-select: none;
-  transition: 200ms ease-out;
 }
 
 .sime {
@@ -30,21 +30,49 @@ body {
   transition: 200ms ease-out;
 }
 
-.nyan-enter {
+.nyan-enter,
+.nyan-leave-to {
   opacity: 0;
 }
 
-.nyan-leave-active {
+.retry {
+  position: absolute;
+  right: -35px;
+  top: -35px;
+  box-sizing: content-box;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  border: 10px solid #333;
+  line-height: 1;
+  background: #fff;
+  border-radius: 50%;
+  color: inherit;
+  font-size: 40px;
+  outline: none;
+}
+
+.retry:active {
+  transform: scale(0.9);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: 300ms;
+}
+
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
 .bounce {
-  animation: bounce 500ms ease-out alternate infinite;
+  animation: bounce 500ms ease-in-out alternate infinite;
 }
 
 @keyframes bounce {
-    0% { transform: scale(0.9) }
-  100% { transform: scale(1.1) }
+   0% { transform: scale(0.9) }
+ 100% { transform: scale(1.1) }
 }
 
 /* modal */
@@ -57,7 +85,7 @@ body {
   bottom: 0;
   background-color: #0008;
   z-index: 9999;
-  transition: .3s ease;
+  transition: 300ms ease;
 }
 
 .modal-container {
@@ -78,15 +106,12 @@ body {
   margin-top: 1rem;
 }
 
-.modal-enter {
-  opacity: 0;
-}
-
+.modal-enter,
 .modal-leave-to {
   opacity: 0;
 }
 
-.modal-enter .modal-container,
-.modal-leave-to .modal-container {
+.modal-enter > .modal-container,
+.modal-leave-to > .modal-container {
   transform: scale(1.1);
 }

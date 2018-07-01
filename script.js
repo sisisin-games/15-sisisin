@@ -2,11 +2,11 @@
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-Vue.component('modal-alert', {
+Vue.component('modal', {
   template: `
     <transition name="modal">
       <div class="modal" @click="$emit('close')">
-        <div class="modal-container" @click="$event.stopPropagation()">
+        <div class="modal-container" @click.stop>
           <slot/>
         </div>
       </div>
@@ -14,35 +14,40 @@ Vue.component('modal-alert', {
   `
 });
 
-new Vue({
+const app = new Vue({
   el: '#app',
 
   template: `
     <div class="board">
       <transition-group tag="div" name="nyan" class="sime" :class="{bounce: finished}" :style="simeStyle">
-        <div v-for="nyan in nyans" :key="nyan.id" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"/>
+        <div v-for="(nyan, i) in nyans" :key="i" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"/>
       </transition-group>
-      <modal-alert v-if="showModal" @close="showModal = false">
+      <modal v-if="modalShown" @close="$emit('modalClosing')">
         <div class="modal-header">ゲームクリア</div>
         <div class="modal-body">
           <div>{{size}} をクリア！</div>
           <div>操作数は {{count}} 回</div>
           <div>タイムは {{time}} 秒でした</div>
         </div>
-      </modal-alert>
+      </modal>
+      <transition name="fade">
+        <button v-if="retryShown" class="retry" @click="retry">↻</button>
+      </transition>
     </div>
   `,
 
   data() {
+    const [, sizeW, sizeH] = (location.search.match(/\bsize=(?!1x1\b)(\d+)x(\d+)/) || [, 4, 4]).map(Number);
     return {
-      showModal: false,
       finished: false,
-      sizeW: 0,
-      sizeH: 0,
+      modalShown: false,
+      retryShown: false,
+      sizeW,
+      sizeH,
       width: 80,
       height: 80,
-      blankX: 0,
-      blankY: 0,
+      blankX: sizeW - 1,
+      blankY: sizeH - 1,
       startedAt: 0,
       endedAt: 0,
       count: 0,
@@ -66,23 +71,19 @@ new Vue({
   },
 
   created() {
-    const [, sizeW, sizeH] = (location.search.match(/\bsize=(?!1x1\b)(\d+)x(\d+)/) || [, 4, 4]).map(Number);
-    this.sizeW = sizeW;
-    this.sizeH = sizeH;
-    this.blankX = sizeW - 1;
-    this.blankY = sizeH - 1;
+    const {sizeW: w, sizeH: h, nyans} = this;
 
     // 初期化
-    for (let i = 0; i < sizeW * sizeH - 1; i++) {
-      const x = i % sizeW;
-      const y = i / sizeW | 0;
-      this.nyans.push({id: i, x0: x, y0: y, x, y});
+    for (let i = 0; i < w * h - 1; i++) {
+      const x = i % w;
+      const y = i / w | 0;
+      nyans.push({x0: x, y0: y, x, y});
     }
 
     // シャッフル
     do {
-      for (let i = 0; i < sizeW * sizeH * 10; i++) {
-        const {blankX, blankY, nyans} = this;
+      for (let i = 0; i < w * h * 10; i++) {
+        const {blankX, blankY} = this;
         const arr = nyans.filter(n => n.x === blankX && n.y !== blankY || n.y === blankY && n.x !== blankX);
         const nyan = arr[Math.random() * arr.length | 0];
         this.move(nyan);
@@ -90,8 +91,8 @@ new Vue({
     } while (this.check());
 
     // 右下をあける
-    for (let y = this.blankY; y < sizeH; y++) {
-      const nyan = this.nyans.find(n => n.x === sizeW - 1 && n.y === y);
+    for (let y = this.blankY; y < h; y++) {
+      const nyan = nyans.find(n => n.x === w - 1 && n.y === y);
       if (nyan)
         this.move(nyan);
     }
@@ -169,6 +170,14 @@ new Vue({
         this.finish();
     },
 
+    async openModal() {
+      this.modalShown = true;
+
+      await new Promise(resolve => this.$once('modalClosing', resolve));
+
+      this.modalShown = false;
+    },
+
     async finish() {
       this.finished = true;
       this.endedAt = Date.now();
@@ -182,16 +191,23 @@ new Vue({
       await wait(500);
 
       this.nyans.push({
-        id: this.sizeW * this.sizeH - 1,
         x0: this.blankX,
         y0: this.blankY,
-        y: this.blankX,
-        x: this.blankY,
+        x: this.blankX,
+        y: this.blankY,
       });
 
       await wait(1000);
 
-      this.showModal = true;
+      await this.openModal();
+
+      this.retryShown = true;
+    },
+
+    retry() {
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.$options.created.forEach(fn => fn.call(this));
+      this.$options.mounted.forEach(fn => fn.call(this));
     },
 
     cv(cvDetail) {
