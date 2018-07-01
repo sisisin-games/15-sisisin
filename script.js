@@ -2,7 +2,7 @@
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-Vue.component('modal', {
+Vue.component('modal-alert', {
   template: `
     <transition name="modal">
       <div class="modal" @click="$emit('close')">
@@ -11,7 +11,11 @@ Vue.component('modal', {
         </div>
       </div>
     </transition>
-  `
+  `,
+
+  mounted() {
+    document.body.appendChild(this.$el);
+  },
 });
 
 const app = new Vue({
@@ -22,17 +26,17 @@ const app = new Vue({
       <transition-group tag="div" name="nyan" class="sime" :class="{bounce: finished}" :style="simeStyle">
         <div v-for="(nyan, i) in nyans" :key="i" class="nyan" @click="click(nyan)" :style="getNyanStyle(nyan)"/>
       </transition-group>
-      <modal v-if="modalShown" @close="$emit('modalClosing')">
+      <transition name="fade">
+        <button v-if="retryShown" class="retry" @click="retry">↻</button>
+      </transition>
+      <modal-alert v-if="modalShown" @close="$emit('modalClosing')">
         <div class="modal-header">ゲームクリア</div>
         <div class="modal-body">
           <div>{{size}} をクリア！</div>
           <div>操作数は {{count}} 回</div>
           <div>タイムは {{time}} 秒でした</div>
         </div>
-      </modal>
-      <transition name="fade">
-        <button v-if="retryShown" class="retry" @click="retry">↻</button>
-      </transition>
+      </modal-alert>
     </div>
   `,
 
