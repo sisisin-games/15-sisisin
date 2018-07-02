@@ -18,7 +18,7 @@ Vue.component('modal-alert', {
   },
 });
 
-const app = new Vue({
+new Vue({
   el: '#app',
 
   template: `
